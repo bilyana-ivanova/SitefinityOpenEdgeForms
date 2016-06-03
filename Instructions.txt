@@ -1,0 +1,33 @@
+1.Include the MVC folder in your project.
+
+2.In order to subscribe for the FormSavedEvent add this code to your Global.asax file:
+	protected void Application_Start(object sender, EventArgs e)
+	{
+		Telerik.Sitefinity.Abstractions.Bootstrapper.Initialized += Bootstrapper_Initialized;
+	}
+	protected void Bootstrapper_Initialized(object sender, Telerik.Sitefinity.Data.ExecutedEventArgs args)
+	{
+		EventHub.Subscribe<FormSavedEvent>(evt => FormEventHandler.Handler(evt));
+	}
+	
+In order to add the OE Grid widget to the content widgets, add this under <tools> to the ContentToolboxSection:
+	<add enabled="True" type="Telerik.Sitefinity.Mvc.Proxy.MvcControllerProxy" controllerType=" SitefinityWebApp.Mvc.Controllers.OEGridController" title="OE Grid" cssClass="sfTextboxIcn sfMvcIcn" ControllerName=" SitefinityWebApp.Mvc.Controllers.OEGridController" visibilityMode="None" name="OEGrid" />
+
+In order to add the OE Entity Selector and the OE Text field to the form widgets, add this under <sections> to the FormControls:
+	<add enabled="True" title="OpenEdge" description="OpenEdge" ordinal="0" name="OpenEdge">
+		<tools>
+			<add enabled="True" type="Telerik.Sitefinity.Mvc.Proxy.MvcControllerProxy" controllerType=" SitefinityWebApp.Mvc.Controllers.OETextFieldController" title="OE Textbox" cssClass="sfTextboxIcn sfMvcIcn" ControllerName=" SitefinityWebApp.Mvc.Controllers.OETextFieldController" visibilityMode="None" name="MvcTextField" />
+			<add enabled="True" type="Telerik.Sitefinity.Mvc.Proxy.MvcControllerProxy" controllerType=" SitefinityWebApp.Mvc.Controllers.OEEntitySelectorController" title="OE EntitySelector" cssClass="sfTextboxIcn sfMvcIcn" ControllerName=" SitefinityWebApp.Mvc.Controllers.OEEntitySelectorController" visibilityMode="None" name="OEEntitySelectorField" />
+		</tools>
+	</add>
+
+3. Update Mvc\Helpers\OEEntityHelper.cs to define the right serviceDefinition and serviceUrl.
+4. Update Mvc\Views\OEGrid\Default.cshtml to define the right serviceURI and catalogURI.
+6. Make sure the necessary resources are loaded on the page as described in the whitepaper "Using JSDO with KendoUI" (https://www.progress.com/docs/default-source/default-document-library/progress/documents/france/3-using_the_jsdo_with_kendoui_v3.pdf?sfvrsn=2)
+	<link rel="stylesheet" href="http://cdn.kendostatic.com/2014.3.1316/styles/kendo.common.min.css" />
+	<link rel="stylesheet" href="http://cdn.kendostatic.com/2014.3.1316/styles/kendo.default.min.css" />
+	<script src="http://cdn.kendostatic.com/2014.3.1316/js/jquery.min.js"></script>
+	<script src="http://cdn.kendostatic.com/2014.3.1316/js/kendo.all.min.js"></script>
+	<script src="http://oemobiledemo.progress.com/jsdo/progress.jsdo.3.1.js"></script>
+
+5. Build your project

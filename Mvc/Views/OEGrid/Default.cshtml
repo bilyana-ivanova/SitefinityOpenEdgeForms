@@ -1,0 +1,70 @@
+﻿@model SitefinityWebApp.Mvc.Models.OEGridModel
+@using Telerik.Sitefinity.Frontend.Mvc.Helpers;
+@using Telerik.Sitefinity.Modules.Pages;
+@using Telerik.Sitefinity.UI.MVC;
+
+@Html.Script(ScriptRef.JQuery, "top")
+
+<div id="example">
+ <div id="grid"></div>
+</div>
+<script>
+    $(function () {
+     var serviceURI = 'http://<host>:<port>/<ServiceName>', 
+     catalogURI = serviceURI + '/rest/static/<ServicePath>.json'; //'/static/mobile/CustomerService.json'
+     // create a new session object
+     var session = new progress.data.Session();
+     session.login(serviceURI, '', '');
+     session.addCatalog(catalogURI);
+        // create a JSDO
+     var jsdo = new progress.data.JSDO({ name: '@Model.Entity' });
+     // select the "grid" div with jQuery and turn it into a Kendo UI Grid
+     $('#grid').kendoGrid({
+         // all Kendo UI widgets use a DataSource to specify which data to display
+         dataSource: {
+             transport: {
+             // when the grid tries to read data, it will call this function
+             // this could alternatively be a URL
+             read: jsdoTransportRead
+             },
+             error: function (e) {
+             console.log('Error: ', e);
+             }
+         },
+         height: 375,
+         // setting up most of the grid functionality is as easy as toggling properties on and off
+         groupable: true,
+         sortable: true,
+         reorderable: true,
+         resizable: true,
+         selectable: true,
+         pageable: {
+             refresh: true,
+             pageSizes: true,
+             pageSize: 10,
+             buttonCount: 5
+         }
+         //,
+         //columns: [
+         //    { field: 'CustNum', title: 'Cust Num', type: 'int', width: 100 },
+         //    { field: 'Name' },
+         //    { field: 'State' },
+         //    { field: 'Country' }
+         //]
+         //,
+     });
+     // this function is called after data is returned from the server
+     function jsdoTransportRead(options) {
+         jsdo.subscribe('AfterFill', function callback(jsdo, success, request) {
+             jsdo.unsubscribe('AfterFill', callback, jsdo);
+                 if (success) {
+                    options.success(jsdo.getData());
+                 }
+                 else {
+                    options.error(request.xhr, request.xhr.status, request.exception);
+                 }
+             }, jsdo);
+         jsdo.fill();
+     }
+ });
+</script>

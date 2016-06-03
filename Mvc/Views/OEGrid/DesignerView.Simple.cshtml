@@ -1,0 +1,22 @@
+@using Telerik.Sitefinity.Frontend.Forms.Mvc.Helpers;
+@using Telerik.Sitefinity.Frontend.Forms.Mvc.Models.Fields.TextField;
+@using Telerik.Sitefinity.Frontend.Mvc.Helpers;
+@using Telerik.Sitefinity.Mvc;
+@using SitefinityWebApp.Mvc.Helpers;
+@using Telerik.Sitefinity.Modules.Pages;
+@using Telerik.Sitefinity.Pages.Model;
+
+        <div class="form-group">
+            <label for="inputType">OE Entity</label>
+            <div class="row">
+                <div class="col-xs-6">
+                    <select id="oeType" ng-model="properties.Entity.PropertyValue"  class="form-control">
+                        @foreach (var key in OEEntityHelper.GetEntities().Keys){
+                            <option value="@key">@key</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>        
+
+
